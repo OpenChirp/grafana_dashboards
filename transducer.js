@@ -36,19 +36,6 @@ function fixedEncodeURIComponent (str) {
     });
 }
 
-/*function getInfluxDatasource(){
-    var datasources = _.values(window.grafanaBootData.settings.datasources);
-    var influxds;
-
-    for (var key in datasources){
-     	var ds = datasources[key];
-    	if ( ds.type == 'influxdb'){
-        	influxds = ds;
-        	break;
-    	}
-    }	
-    return influxds;
-}*/
 
 dashboard.time = {
   from: "now/w",
@@ -56,28 +43,33 @@ dashboard.time = {
 };
 
 var deviceId;
-var transducerName;
+var transducerNames;
 var seriesName;
 
 if(!_.isUndefined(ARGS.device)) {
   deviceId = ARGS.device;
-  transducerName = ARGS.transducer
-  seriesName = deviceId +"_"+ transducerName;
+}
+else{
+  return dashboard;
 }
 
-// var influxds = getInfluxDatasource(); 
+if(!_.isUndefined(ARGS.transducers)){
+   transducerNames = ARGS.transducers.split(",");	
+}
+else{
+  return dashboard;
+}
 
-var rows = 1;
+var rows = transducerNames.length;
 
 
 //dashboard.title = "Timeseries data for "+seriesName;
 dashboard.editable = false;
 dashboard.hideControls=true;
-//dashboard.style="light";
-//dashboard.theme="light";
 
 for (var i = 0; i < rows; i++) {
-
+  seriesName = deviceId+"_"+transducerNames[i];
+  console.log(seriesName);
   dashboard.rows.push({
       "collapse": false,
       "editable": false,
@@ -125,7 +117,7 @@ for (var i = 0; i < rows; i++) {
           ],
           "timeFrom": null,
           "timeShift": null,
-          "title": transducerName,
+          "title": transducerNames[i],
           "tooltip": {
             "msResolution": false,
             "shared": true,
