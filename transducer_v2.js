@@ -144,7 +144,7 @@ for (var i = 0; i < rows; i++) {
 				[
 				{
 					"params": [
-					"rx_devaddr"
+					transducerNames[i]
 					],
 					"type": "field"
 				},
